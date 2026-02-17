@@ -30,8 +30,17 @@
 	font-style: normal;
 	font-display: swap;
 }
+
+@font-face {
+  font-family: 'Pecita';
+  src: url('/fonts/Pecita.otf') format('otf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
-	font-family: "Atkinson", sans-serif;
+	font-family: "Pecita", sans-serif;
 	margin: 0;
 	padding: 0;
 	text-align: left;
@@ -153,3 +162,8 @@ hr {
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
+
+.iris {
+	opacity: 0;
+}
+
