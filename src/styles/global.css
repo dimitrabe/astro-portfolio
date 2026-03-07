@@ -6,9 +6,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet');
 
 :root {
-	--accent: #2337ff;
+	--bg-light: #f9f9f9;
+	--accent: #8A84E2;
 	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
+	--black: #2E294E;
 	--gray: 96, 115, 159;
 	--gray-light: 229, 233, 240;
 	--gray-dark: 34, 41, 57;
@@ -32,7 +33,7 @@ body {
 	margin: 0;
 	padding: 0;
 	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
+	background: var(--bg-light);
 	background-size: 100% 600px;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
@@ -52,7 +53,7 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: 'Open Sans', sans-serif;
+	font-family: 'Pecita', sans-serif;
 	margin: 0 0 0.5rem 0;
 	color: rgb(var(--black));
 	line-height: 1.2;
