@@ -16,13 +16,56 @@ import GirlWithCatSVG from '../assets/girl_with_cat.svg';
 		<Header />
 		<main>
 			<div class="girl-with-cat">
+				<p class="dialogue-bubble">Spiralling somewhere between design, art & engineering. How can I help?</p>
 				<GirlWithCatSVG />
 			</div>
 		</main>
 		<Footer />
 	</body>
+	<style>
+		main {
+			height: 72vh;
+		}
+		.girl-with-cat {
+			cursor: pointer;
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr;
+			grid-template-rows: 1fr 1fr 1fr;
+		}
+		.girl-with-cat svg{
+			grid-column: 2 / span 2;
+			grid-row: 2 / span 2;
+		}
+		.dialogue-bubble {
+			opacity: 0;
+			visibility: hidden;
+			grid-column: 1 / span 2;
+			grid-row: 1 / 1;
+			border: 1px solid var(--accent);
+			border-radius: 9999px;
+			background: var(--accent);
+			margin: auto;
+			padding: 2em;
+		}
+		.dialogue-bubble:after {
+			content: '';
+			position: relative;
+			bottom: -30%;
+			left: 0;
+			width: 0;
+			height: 0;
+			border: 36px solid transparent;
+			border-top-color: var(--accent);
+			border-bottom: 0;
+			border-right: 0;
+			margin-left: -18px;
+			margin-bottom: -36px;
+		}
+
+	</style>
 	<script>
     	import { gsap } from 'gsap';
+
 		const EYES_FRAME_DURATION = 0.4;
 		const BLINK_DELAY=6;
 		const EASE_FUNCTION = "slow(0.9,1,false)";
@@ -48,7 +91,7 @@ import GirlWithCatSVG from '../assets/girl_with_cat.svg';
 				.to(".iris-right-diamond", {duration: EYES_FRAME_DURATION, ease: EASE_FUNCTION, opacity: 1},"<")
 		
 		// Person reacts on hover
-		const person = document.querySelector('#girl-with-cat');
+		const person = document.querySelector('.girl-with-cat');
 		
 		person?.addEventListener('mouseenter', () => {
 			tl_eye_left.pause();
@@ -56,6 +99,7 @@ import GirlWithCatSVG from '../assets/girl_with_cat.svg';
 			gsap.to(".iris", {opacity: 0});
 			gsap.to(".iris-left-open", {opacity: 1});
 			gsap.to(".iris-right-open", {opacity: 1});
+			gsap.to(".dialogue-bubble", {opacity: 1, visibility:"visible"});
 		});
 		
 		person?.addEventListener('mouseleave', () => {
@@ -63,6 +107,7 @@ import GirlWithCatSVG from '../assets/girl_with_cat.svg';
 			gsap.to(".iris-right-open", {opacity: 0});
 			tl_eye_left.resume();
 			tl_eye_right.resume();
+			gsap.to(".dialogue-bubble", {opacity: 0, visibility:"hidden"});
 		});
 	</script>
 </html>
