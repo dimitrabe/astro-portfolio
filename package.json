@@ -6,14 +6,15 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "generate:paintings": "node generate-painting-posts.js"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
-    "astro": "^5.17.1",
+    "astro": "^5.18.0",
     "gsap": "^3.14.2",
-    "sharp": "^0.34.3"
+    "sharp": "^0.34.5"
   }
 }
