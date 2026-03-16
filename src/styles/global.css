@@ -6,14 +6,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet');
 
 :root {
+	--yellow: #FFE079;
+	--light-pink: #FDC1E4;
+	--pink: #FD61BB;
+	--dark-pink: #B059A7;
+	--light-blue: #9EE1FB;
+	--blue: #00C2D1;
+	--dark-blue: #0A1045;
+	--light-purple: #9271B2;
+	--purple: #4D3167;
+	--dark-purple: #250E3B;
+
+	--text-on-light-primary: var(--dark-purple);
+	--text-on-light-secondary: var(--purple);
+	--text-link-active: var(--purple)
+
 	--bg-light: #f9f9f9;
-	--accent: #8A84E2;
-	--accent-dark: #000d8a;
-	--black: #2E294E;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
+
 	--box-shadow:
 		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%), 0 16px 32px
 		rgba(var(--gray), 33%);
@@ -37,7 +46,7 @@ body {
 	background-size: 100% 600px;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
+	color: var(--text-on-light-primary);
 	font-size: 20px;
 	line-height: 1.7;
 }
@@ -50,7 +59,7 @@ h5,
 h6 {
 	font-family: 'Pecita', sans-serif;
 	margin: 0 0 0.5rem 0;
-	color: rgb(var(--black));
+	color: rgb(var(--text-on-light-primary));
 	line-height: 1.2;
 }
 h1 {
@@ -71,15 +80,18 @@ h5 {
 strong,
 b {
 	font-weight: 700;
+	font-family: 'Open Sans', sans-serif;
 }
 a {
 	color: var(--accent);
+	font-family: 'Open Sans', sans-serif;
 }
 a:hover {
 	color: var(--accent);
 }
 p {
 	margin-bottom: 1em;
+	font-family: 'Open Sans', sans-serif;
 }
 .prose p {
 	margin-bottom: 2em;
@@ -123,7 +135,7 @@ hr {
 }
 @media (max-width: 720px) {
 	body {
-		font-size: 18px;
+		font-size: 1em;
 	}
 	main {
 		padding: 1em;
@@ -146,8 +158,4 @@ hr {
 	clip-path: inset(50%);
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
-}
-
-.iris {
-	opacity: 0;
 }
