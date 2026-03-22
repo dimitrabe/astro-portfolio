@@ -1,14 +1,17 @@
 ---
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
+import Logo from './Logo.astro'; 
 ---
 
 <header>
 	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<Logo/>
 		<div class="internal-links">
 			<HeaderLink href="/">Home</HeaderLink>
 			<HeaderLink href="/paintings">Paintings</HeaderLink>
+			<HeaderLink href="/graphic-design">Graphic Design</HeaderLink>
+			<a href="https://bedesignlab.com" target="_blank">Web Design</a>
 			<HeaderLink href="/about">About</HeaderLink>
 		</div>
 	</nav>
