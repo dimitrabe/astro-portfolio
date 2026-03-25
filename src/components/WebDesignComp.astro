@@ -4,13 +4,16 @@ const { class: className } = Astro.props;
 
 <div class:list={["web-design-comp-container", className]}>
   <svg
-    width="1021"
-    height="806"
+    width="100%"
     viewBox="0 0 1021 806"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     id="web-design-animated"
   >
+    <title>
+      Spider hanging from a web. Inside the web, the words 'web design' are
+      written
+    </title>
     <g id="web-design">
       <g clip-path="url(#clip0_147_685)">
         <path
@@ -136,14 +139,26 @@ const { class: className } = Astro.props;
 
   // Animation data: [finalX, finalY, finalRotation]
   const animationData = {
-    "spider-leg-left-top": {transformOrigin:"bottom left", rotation: 5},
-    "spider-leg-left-middle-top": {transformOrigin:"bottom right", rotation: 5},
-    "spider-leg-left-middle-bottom": {transformOrigin:"bottom right", rotation: 5},
-    "spider-leg-left-bottom": {transformOrigin:"bottom right", rotation: 5},
-    "spider-leg-right-top": {transformOrigin:"bottom right", rotation: 5},
-    "spider-leg-right-middle-top": {transformOrigin:"bottom right", rotation: 5},
-    "spider-leg-right-middle-bottom": {transformOrigin:"bottom right", rotation: 5},
-    "spider-leg-right-bottom": {transformOrigin:"bottom right", rotation: 5},
+    "spider-leg-left-top": { transformOrigin: "bottom left", rotation: 5 },
+    "spider-leg-left-middle-top": {
+      transformOrigin: "bottom right",
+      rotation: 5,
+    },
+    "spider-leg-left-middle-bottom": {
+      transformOrigin: "bottom right",
+      rotation: 5,
+    },
+    "spider-leg-left-bottom": { transformOrigin: "bottom right", rotation: 5 },
+    "spider-leg-right-top": { transformOrigin: "bottom right", rotation: 5 },
+    "spider-leg-right-middle-top": {
+      transformOrigin: "bottom right",
+      rotation: 5,
+    },
+    "spider-leg-right-middle-bottom": {
+      transformOrigin: "bottom right",
+      rotation: 5,
+    },
+    "spider-leg-right-bottom": { transformOrigin: "bottom right", rotation: 5 },
   };
 
   const svg = document.getElementById("web-design-animated");
@@ -154,8 +169,8 @@ const { class: className } = Astro.props;
     const element = document.getElementById(id);
     if (element) {
       gsap.set(element, {
-          rotation: 0,           // Rotate 10 degrees
-          transformOrigin: data.transformOrigin, // Pivot from the top-left (where it connects to body)
+        rotation: 0, // Rotate 10 degrees
+        transformOrigin: data.transformOrigin, // Pivot from the top-left (where it connects to body)
       });
     }
   });
@@ -169,11 +184,12 @@ const { class: className } = Astro.props;
       if (element) {
         timeline.to(
           element,
-          { rotation: data.rotation,
+          {
+            rotation: data.rotation,
             duration: 0.5,
-            yoyo: true,            // Go back and forth
-            repeat: -1,            // Loop forever
-            ease: "sine.inOut"
+            yoyo: true, // Go back and forth
+            repeat: -1, // Loop forever
+            ease: "sine.inOut",
           },
           0, // Start all animations at the same time
         );

@@ -4,59 +4,126 @@ const { class: className } = Astro.props;
 ---
 
 <div class:list={["graphic-design-comp-container", className]}>
-  <svg width="568" height="426" viewBox="0 0 568 426" fill="none" xmlns="http://www.w3.org/2000/svg" id="graphic-design-animated">
-    <path id="letter-C" d="M82 288C60.25 288 34.9 287.65 19.52 296.52C4.15 305.39 0 322.76 0 335.3C0 347.85 4.15 367.59 19.52 376.46C34.9 385.33 60.25 382.61 82 382.61L82 335.3V288Z" fill="var(--light-purple)"/>
-    
-    <path id="letter-I-a" d="M163 288H187V382H163V288Z" fill="var(--blue)"/>
-    
-    <path id="letter-H" fill-rule="evenodd" clip-rule="evenodd" d="M266 317H197V223H266V317ZM206.26 258V282H256.26V258H206.26Z" fill="var(--light-blue)"/>
-    
-    <path id="letter-P" d="M92 242C92 222.67 107.67 207 127 207C146.33 207 162 222.67 162 242C162 245.84 161.38 249.54 160.23 253L187 253V277H93V253H93.76C92.62 249.54 92 245.84 92 242Z" fill="var(--dark-pink)"/>
-    
-    <path id="letter-A" d="M232.17 327L276.34 426H188L232.17 327Z" fill="var(--light-pink)"/>
-    
-    <path id="letter-R" d="M68.15 188.54C62.94 185.05 56.6 183 49.75 183C32.08 183 17.75 196.66 17.75 213.5C17.75 225.31 24.79 235.55 35.09 240.62L12 277H81.75V183H71.66L68.15 188.54Z" fill="var(--light-pink)"/>
-    
-    <path id="letter-G-a" d="M112.5 0C136.24 0 155.53 21.12 155.99 47.37H118.3V96.24C116.4 96.52 114.47 96.67 112.5 96.67C88.48 96.67 69 75.03 69 48.33C69 21.64 88.48 0 112.5 0Z" fill="var(--pink)"/>
-    
-    <path id="letter-N-a" d="M196.98 153H131V59H131.16L196.98 153Z" fill="var(--yellow)"/>
-    
-    <path id="letter-N-b" d="M211.75 141.34L154.1 59H211.75V141.34Z" fill="var(--yellow)"/>
-    
-    <path id="letter-G-b" d="M225.49 211.13C201.76 210.88 182.69 189.56 182.5 163.3L220.19 163.7L220.71 114.83C222.61 114.56 224.54 114.44 226.51 114.46C250.54 114.71 269.79 136.56 269.5 163.25C269.22 189.95 249.52 211.39 225.49 211.13Z" fill="var(--light-purple)"/>
-    
-    <path id="letter-I-b" d="M276 195H300V289H276V195Z" fill="var(--yellow)"/>
-    
-    <path id="letter-S" d="M361.91 300C367.1 291.47 374.91 289 380.79 289C387.69 289 398.53 292.39 403.41 304.95C408.28 317.52 406.78 338.23 406.78 356H356.1C350.63 364.53 341.87 367 335.99 367C329.1 367 319.55 363.61 314.68 351.05C309.81 338.48 310 317.77 310 300H361.91Z" fill="var(--dark-pink)"/>
-    
-    <path id="letter-E" fill-rule="evenodd" clip-rule="evenodd" d="M93 382H151V288H93V382ZM150.85 321V345H100.85V321H150.85Z" fill="var(--pink)"/>
-    
-    <path id="letter-D" d="M310 195C330.73 195 354.89 194.65 369.54 203.38C384.2 212.1 388.15 229.18 388.15 241.52C388.15 253.85 384.2 273.26 369.54 281.99C354.89 290.71 330.73 288.03 310 288.03L310 241.52V195Z" fill="var(--blue)"/>
+  <svg
+    width="100%"
+    viewBox="0 0 568 426"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    id="graphic-design-animated"
+  >
+    <title>Graphic Design colorful letters composition</title>
+    <path
+      id="letter-C"
+      d="M82 288C60.25 288 34.9 287.65 19.52 296.52C4.15 305.39 0 322.76 0 335.3C0 347.85 4.15 367.59 19.52 376.46C34.9 385.33 60.25 382.61 82 382.61L82 335.3V288Z"
+      fill="var(--light-purple)"></path>
+
+    <path id="letter-I-a" d="M163 288H187V382H163V288Z" fill="var(--blue)"
+    ></path>
+
+    <path
+      id="letter-H"
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M266 317H197V223H266V317ZM206.26 258V282H256.26V258H206.26Z"
+      fill="var(--light-blue)"></path>
+
+    <path
+      id="letter-P"
+      d="M92 242C92 222.67 107.67 207 127 207C146.33 207 162 222.67 162 242C162 245.84 161.38 249.54 160.23 253L187 253V277H93V253H93.76C92.62 249.54 92 245.84 92 242Z"
+      fill="var(--dark-pink)"></path>
+
+    <path
+      id="letter-A"
+      d="M232.17 327L276.34 426H188L232.17 327Z"
+      fill="var(--light-pink)"></path>
+
+    <path
+      id="letter-R"
+      d="M68.15 188.54C62.94 185.05 56.6 183 49.75 183C32.08 183 17.75 196.66 17.75 213.5C17.75 225.31 24.79 235.55 35.09 240.62L12 277H81.75V183H71.66L68.15 188.54Z"
+      fill="var(--light-pink)"></path>
+
+    <path
+      id="letter-G-a"
+      d="M112.5 0C136.24 0 155.53 21.12 155.99 47.37H118.3V96.24C116.4 96.52 114.47 96.67 112.5 96.67C88.48 96.67 69 75.03 69 48.33C69 21.64 88.48 0 112.5 0Z"
+      fill="var(--pink)"></path>
+
+    <path
+      id="letter-N-a"
+      d="M196.98 153H131V59H131.16L196.98 153Z"
+      fill="var(--yellow)"></path>
+
+    <path
+      id="letter-N-b"
+      d="M211.75 141.34L154.1 59H211.75V141.34Z"
+      fill="var(--yellow)"></path>
+
+    <path
+      id="letter-G-b"
+      d="M225.49 211.13C201.76 210.88 182.69 189.56 182.5 163.3L220.19 163.7L220.71 114.83C222.61 114.56 224.54 114.44 226.51 114.46C250.54 114.71 269.79 136.56 269.5 163.25C269.22 189.95 249.52 211.39 225.49 211.13Z"
+      fill="var(--light-purple)"></path>
+
+    <path id="letter-I-b" d="M276 195H300V289H276V195Z" fill="var(--yellow)"
+    ></path>
+
+    <path
+      id="letter-S"
+      d="M361.91 300C367.1 291.47 374.91 289 380.79 289C387.69 289 398.53 292.39 403.41 304.95C408.28 317.52 406.78 338.23 406.78 356H356.1C350.63 364.53 341.87 367 335.99 367C329.1 367 319.55 363.61 314.68 351.05C309.81 338.48 310 317.77 310 300H361.91Z"
+      fill="var(--dark-pink)"></path>
+
+    <path
+      id="letter-E"
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M93 382H151V288H93V382ZM150.85 321V345H100.85V321H150.85Z"
+      fill="var(--pink)"></path>
+
+    <path
+      id="letter-D"
+      d="M310 195C330.73 195 354.89 194.65 369.54 203.38C384.2 212.1 388.15 229.18 388.15 241.52C388.15 253.85 384.2 273.26 369.54 281.99C354.89 290.71 330.73 288.03 310 288.03L310 241.52V195Z"
+      fill="var(--blue)"></path>
   </svg>
 </div>
 
 <script>
-  import { gsap } from 'gsap';
+  import { gsap } from "gsap";
 
   // Animation data: [finalX, finalY, finalRotation]
+  // const animationData = {
+  //   'letter-C': { x: 485.94, y: -284.42, rotation: 0, scaleX: 1},
+  //   'letter-I-a': { x: 281.08, y: -283, rotation: 0, scaleX: 1 },
+  //   'letter-H': { x: 155.08, y: -218, rotation: 0, scaleX: 1 },
+  //   'letter-P': { x: 170.08, y: -190, rotation: 90, scaleX: 1 },
+  //   'letter-A': { x: -11.26, y: -327, rotation: 0, scaleX: 1 },
+  //   'letter-R': { x: 84.84, y: -178, rotation: 0, scaleX: -1},
+  //   'letter-G-a': { x: -69, y: 2.33, rotation: 0, scaleX: 1 },
+  //   'letter-N-a': { x: 293.14, y: 55, rotation: 0, scaleX: 1 },
+  //   'letter-N-b': { x: 293.15, y: 55, rotation: 0, scaleX: 1 },
+  //   'letter-G-b': { x: 137.16, y: -2.81, rotation: 179.4, scaleX: 1 },
+  //   'letter-I-b': { x: -0.86, y: -81, rotation: 0, scaleX: 1 },
+  //   'letter-S': { x: -140, y: -165.1, rotation: 90, scaleX: 1 },
+  //   'letter-E': { x: 4.15, y: -174, rotation: 0, scaleX: 1 },
+  //   'letter-D': { x: -309, y: -80.42, rotation: 0, scaleX: 1 }
+  // };
+  // Animation data: [finalX, finalY, finalRotation]
+  // Y coordinates shifted down by approximately 100-120px to center the composition
   const animationData = {
-    'letter-C': { x: 485.94, y: -284.42, rotation: 0, scaleX: 1},
-    'letter-I-a': { x: 281.08, y: -283, rotation: 0, scaleX: 1 },
-    'letter-H': { x: 155.08, y: -218, rotation: 0, scaleX: 1 },
-    'letter-P': { x: 170.08, y: -190, rotation: 90, scaleX: 1 },
-    'letter-A': { x: -11.26, y: -327, rotation: 0, scaleX: 1 },
-    'letter-R': { x: 84.84, y: -178, rotation: 0, scaleX: -1},
-    'letter-G-a': { x: -69, y: 2.33, rotation: 0, scaleX: 1 },
-    'letter-N-a': { x: 293.14, y: 55, rotation: 0, scaleX: 1 },
-    'letter-N-b': { x: 293.15, y: 55, rotation: 0, scaleX: 1 },
-    'letter-G-b': { x: 137.16, y: -2.81, rotation: 179.4, scaleX: 1 },
-    'letter-I-b': { x: -0.86, y: -81, rotation: 0, scaleX: 1 },
-    'letter-S': { x: -140, y: -165.1, rotation: 90, scaleX: 1 },
-    'letter-E': { x: 4.15, y: -174, rotation: 0, scaleX: 1 },
-    'letter-D': { x: -309, y: -80.42, rotation: 0, scaleX: 1 }
+    "letter-C": { x: 485.94, y: -164.42, rotation: 0, scaleX: 1 },
+    "letter-I-a": { x: 281.08, y: -163, rotation: 0, scaleX: 1 },
+    "letter-H": { x: 155.08, y: -98, rotation: 0, scaleX: 1 },
+    "letter-P": { x: 170.08, y: -70, rotation: 90, scaleX: 1 },
+    "letter-A": { x: -11.26, y: -207, rotation: 0, scaleX: 1 },
+    "letter-R": { x: 84.84, y: -58, rotation: 0, scaleX: -1 },
+    "letter-G-a": { x: -69, y: 122.33, rotation: 0, scaleX: 1 },
+    "letter-N-a": { x: 293.14, y: 175, rotation: 0, scaleX: 1 },
+    "letter-N-b": { x: 293.15, y: 175, rotation: 0, scaleX: 1 },
+    "letter-G-b": { x: 137.16, y: 117.19, rotation: 179.4, scaleX: 1 },
+    "letter-I-b": { x: -0.86, y: 39, rotation: 0, scaleX: 1 },
+    "letter-S": { x: -140, y: -45.1, rotation: 90, scaleX: 1 },
+    "letter-E": { x: 4.15, y: -54, rotation: 0, scaleX: 1 },
+    "letter-D": { x: -309, y: 39.58, rotation: 0, scaleX: 1 },
   };
 
-  const svg = document.getElementById('graphic-design-animated');
+  const svg = document.getElementById("graphic-design-animated");
   let timeline: gsap.core.Timeline;
 
   // Set initial state
@@ -68,7 +135,7 @@ const { class: className } = Astro.props;
         y: 0,
         rotation: 0,
         scaleX: 1,
-        transformOrigin: 'center center'
+        transformOrigin: "center center",
       });
     }
   });
@@ -88,9 +155,9 @@ const { class: className } = Astro.props;
             rotation: data.rotation,
             scaleX: data.scaleX,
             duration: 2,
-            ease: 'power2.inOut'
+            ease: "power2.inOut",
           },
-          0 // Start all animations at the same time
+          0, // Start all animations at the same time
         );
       }
     });
@@ -100,11 +167,11 @@ const { class: className } = Astro.props;
   createTimeline();
 
   // Hover event handlers
-  svg?.addEventListener('mouseenter', () => {
+  svg?.addEventListener("mouseenter", () => {
     timeline.play();
   });
 
-  svg?.addEventListener('mouseleave', () => {
+  svg?.addEventListener("mouseleave", () => {
     timeline.reverse();
   });
 </script>

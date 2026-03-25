@@ -2,7 +2,12 @@
 const { class: className } = Astro.props;
 ---
 
-<div class:list={["girl-with-cat", className]}>
+<div class:list={["girl-with-cat-wrapper", className]}>
+    <div class="dialogue-bubble">
+        <p class="body">Spiralling somewhere between design, art & engineering. <br />How can I
+        help?</p>
+        <div class="buttons-container"><a class="primary-button" href="mailto:bedimitra@gmail.com">contact </a><a class="secondary-button" href="/about">about</a></div>
+    </div>
     <svg
         width="392"
         height="593"
@@ -11,6 +16,7 @@ const { class: className } = Astro.props;
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink"
     >
+        <title>Girl with cat and laptop on her lap</title>
         <g id="girl-with-cat">
             <g id="neck">
                 <path
@@ -332,127 +338,186 @@ const { class: className } = Astro.props;
     </svg>
 </div>
 <style>
-    .girl-with-cat {
+    .girl-with-cat-wrapper {
+        position: relative;
         width: 100%;
         height: 100%;
-        max-width: 100%;
-        max-height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    .girl-with-cat > svg > g {
+
+    .girl-with-cat-svg {
         width: 100%;
         height: auto;
-        max-width: 100%;
         max-height: 100%;
+        object-fit: contain;
+    }
+
+    .dialogue-bubble {
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        transform: translateX(-50%);
+        border: 1px solid var(--dark-purple, #250e3b);
+        border-radius: 9999px;
+        padding: 1em 2em;
+        max-width: 30ch;
+        text-align: center;
+        background: white;
+        z-index: 10;
+        transition:
+            opacity 0.3s ease,
+            visibility 0.3s ease;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .dialogue-bubble {
+            font-size: 0.875rem;
+            padding: 0.75em 1.5em;
+            max-width: 25ch;
+
+            transform: translateX(0%);
+            transform: translateY(-50%);
+        }
     }
 </style>
 <script>
-import { gsap } from "gsap";
+    import { gsap } from "gsap";
 
-// Constants
-const EYES_FRAME_DURATION = 0.5;
-const EASE_FUNCTION = "power2.inOut";
-const BLINK_DURATION = 0.15;
+    // Constants
+    const EYES_FRAME_DURATION = 0.5;
+    const EASE_FUNCTION = "power2.inOut";
+    const BLINK_DURATION = 0.15;
 
-// Eye shapes to cycle through
-const EYE_SHAPES = ["diamond", "square", "triangle", "star"];
+    // Eye shapes to cycle through
+    const EYE_SHAPES = ["diamond", "square", "triangle", "star"];
 
-// Helper function to create shape cycling timeline for one eye
-function createShapeCycleTimeline(side) {
-    const tl = gsap.timeline({ repeat: -1 });
-    
-    EYE_SHAPES.forEach((shape, index) => {
-        const currentShape = `.iris-${side}-${shape}`;
-        const nextShape = `.iris-${side}-${EYE_SHAPES[(index + 1) % EYE_SHAPES.length]}`;
-        
-        tl.to(currentShape, {
-            duration: EYES_FRAME_DURATION,
+    // Helper function to create shape cycling timeline for one eye
+    function createShapeCycleTimeline(side) {
+        const tl = gsap.timeline({ repeat: -1 });
+
+        EYE_SHAPES.forEach((shape, index) => {
+            const currentShape = `.iris-${side}-${shape}`;
+            const nextShape = `.iris-${side}-${EYE_SHAPES[(index + 1) % EYE_SHAPES.length]}`;
+
+            tl.to(currentShape, {
+                duration: EYES_FRAME_DURATION,
+                ease: EASE_FUNCTION,
+                opacity: 0,
+            }).to(
+                nextShape,
+                {
+                    duration: EYES_FRAME_DURATION,
+                    ease: EASE_FUNCTION,
+                    opacity: 1,
+                },
+                "<",
+            );
+        });
+
+        return tl;
+    }
+
+    // Helper function to create blink timeline for one eye
+    function createBlinkTimeline(side) {
+        const tl = gsap.timeline({ repeat: -1, paused: true });
+
+        // Open -> Closed -> Open
+        tl.to(`.iris-${side}-open`, {
+            duration: BLINK_DURATION,
             ease: EASE_FUNCTION,
             opacity: 0,
-        }).to(
-            nextShape,
-            { duration: EYES_FRAME_DURATION, ease: EASE_FUNCTION, opacity: 1 },
-            "<",
-        );
+        })
+            .to(
+                `.iris-${side}-closed`,
+                { duration: BLINK_DURATION, ease: EASE_FUNCTION, opacity: 1 },
+                "<",
+            )
+            .to(`.iris-${side}-closed`, {
+                duration: BLINK_DURATION,
+                ease: EASE_FUNCTION,
+                opacity: 0,
+                delay: 0.1, // Keep eyes closed briefly
+            })
+            .to(
+                `.iris-${side}-open`,
+                { duration: BLINK_DURATION, ease: EASE_FUNCTION, opacity: 1 },
+                "<",
+            )
+            .to({}, { duration: 1.5 }); // Pause between blinks
+
+        return tl;
+    }
+
+    // Set initial states
+    gsap.set(".iris-left-diamond", { opacity: 1 });
+    gsap.set(".iris-right-diamond", { opacity: 1 });
+    gsap.set([".iris-left-square", ".iris-left-triangle", ".iris-left-star"], {
+        opacity: 0,
     });
-    
-    return tl;
-}
+    gsap.set(
+        [".iris-right-square", ".iris-right-triangle", ".iris-right-star"],
+        { opacity: 0 },
+    );
+    gsap.set(
+        [
+            ".iris-left-open",
+            ".iris-left-closed",
+            ".iris-right-open",
+            ".iris-right-closed",
+        ],
+        { opacity: 0 },
+    );
 
-// Helper function to create blink timeline for one eye
-function createBlinkTimeline(side) {
-    const tl = gsap.timeline({ repeat: -1, paused: true });
-    
-    // Open -> Closed -> Open
-    tl.to(`.iris-${side}-open`, {
-        duration: BLINK_DURATION,
-        ease: EASE_FUNCTION,
-        opacity: 0,
-    })
-    .to(
-        `.iris-${side}-closed`,
-        { duration: BLINK_DURATION, ease: EASE_FUNCTION, opacity: 1 },
-        "<",
-    )
-    .to(`.iris-${side}-closed`, {
-        duration: BLINK_DURATION,
-        ease: EASE_FUNCTION,
-        opacity: 0,
-        delay: 0.1, // Keep eyes closed briefly
-    })
-    .to(
-        `.iris-${side}-open`,
-        { duration: BLINK_DURATION, ease: EASE_FUNCTION, opacity: 1 },
-        "<",
-    )
-    .to({}, { duration: 1.5 }); // Pause between blinks
-    
-    return tl;
-}
+    // Create timelines
+    const tl_eye_left = createShapeCycleTimeline("left");
+    const tl_eye_right = createShapeCycleTimeline("right");
+    const tl_blink_left = createBlinkTimeline("left");
+    const tl_blink_right = createBlinkTimeline("right");
 
-// Set initial states
-gsap.set(".iris-left-diamond", { opacity: 1 });
-gsap.set(".iris-right-diamond", { opacity: 1 });
-gsap.set([".iris-left-square", ".iris-left-triangle", ".iris-left-star"], { opacity: 0 });
-gsap.set([".iris-right-square", ".iris-right-triangle", ".iris-right-star"], { opacity: 0 });
-gsap.set([".iris-left-open", ".iris-left-closed", ".iris-right-open", ".iris-right-closed"], { opacity: 0 });
+    // Mouse interaction
+    const person = document.querySelector(".girl-with-cat");
 
-// Create timelines
-const tl_eye_left = createShapeCycleTimeline("left");
-const tl_eye_right = createShapeCycleTimeline("right");
-const tl_blink_left = createBlinkTimeline("left");
-const tl_blink_right = createBlinkTimeline("right");
+    person?.addEventListener("mouseenter", () => {
+        // Pause shape cycling
+        tl_eye_left.pause();
+        tl_eye_right.pause();
 
-// Mouse interaction
-const person = document.querySelector(".girl-with-cat");
+        // Hide all shape paths
+        const shapeSelectors = EYE_SHAPES.flatMap((shape) => [
+            `.iris-left-${shape}`,
+            `.iris-right-${shape}`,
+        ]);
+        gsap.set(shapeSelectors, { opacity: 0 });
 
-person?.addEventListener("mouseenter", () => {
-    // Pause shape cycling
-    tl_eye_left.pause();
-    tl_eye_right.pause();
-    
-    // Hide all shape paths
-    const shapeSelectors = EYE_SHAPES.flatMap(shape => [
-        `.iris-left-${shape}`,
-        `.iris-right-${shape}`
-    ]);
-    gsap.set(shapeSelectors, { opacity: 0 });
-    
-    // Show open eyes and start blinking
-    gsap.set([".iris-left-open", ".iris-right-open"], { opacity: 1 });
-    tl_blink_left.restart();
-    tl_blink_right.restart();
-});
+        // Show open eyes and start blinking
+        gsap.set([".iris-left-open", ".iris-right-open"], { opacity: 1 });
+        tl_blink_left.restart();
+        tl_blink_right.restart();
+    });
 
-person?.addEventListener("mouseleave", () => {
-    // Stop blinking
-    tl_blink_left.pause();
-    tl_blink_right.pause();
-    
-    // Hide blink states
-    gsap.set([".iris-left-open", ".iris-left-closed", ".iris-right-open", ".iris-right-closed"], { opacity: 0 });
-    
-    // Resume shape cycling from current position
-    tl_eye_left.resume();
-    tl_eye_right.resume();
-});
+    person?.addEventListener("mouseleave", () => {
+        // Stop blinking
+        tl_blink_left.pause();
+        tl_blink_right.pause();
+
+        // Hide blink states
+        gsap.set(
+            [
+                ".iris-left-open",
+                ".iris-left-closed",
+                ".iris-right-open",
+                ".iris-right-closed",
+            ],
+            { opacity: 0 },
+        );
+
+        // Resume shape cycling from current position
+        tl_eye_left.resume();
+        tl_eye_right.resume();
+    });
 </script>
