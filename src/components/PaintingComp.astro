@@ -1,0 +1,230 @@
+---
+const svgWidth = 680;
+const svgHeight = 720;
+const canvasX = Math.round(svgWidth * 0.2);
+const canvasY = Math.round(svgHeight * 0.083);
+const canvasWidth = Math.round(svgWidth * 0.6);
+const canvasHeight = Math.round(svgHeight * 0.8);
+---
+
+<div class="easel-container">
+  <svg
+    id="easel-svg"
+    width="100%"
+    viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+    data-canvas-x={canvasX}
+    data-canvas-y={canvasY}
+    data-canvas-width={canvasWidth}
+    data-canvas-height={canvasHeight}
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <clipPath id="canvas-clip">
+        <rect
+          x={canvasX}
+          y={canvasY}
+          width={canvasWidth}
+          height={canvasHeight}
+          rx="2"></rect>
+      </clipPath>
+      <filter id="canvas-shadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.3"
+        ></feDropShadow>
+      </filter>
+    </defs>
+
+    <!-- Easel legs -->
+    <line
+      x1={canvasX + 0.2 * canvasWidth}
+      y1={svgHeight}
+      x2={svgWidth * 0.5}
+      y2={canvasY - 12}
+      stroke="var(--dark-blue)"
+      stroke-width="10"
+      stroke-linecap="round"></line>
+    <line
+      x1={canvasX + 0.8 * canvasWidth}
+      y1={svgHeight}
+      x2={svgWidth * 0.5}
+      y2={canvasY - 12}
+      stroke="var(--dark-blue)"
+      stroke-width="10"
+      stroke-linecap="round"></line>
+    <line
+      x1={canvasX - 6}
+      y1={canvasY + canvasHeight + 4}
+      x2={canvasX + canvasWidth + 6}
+      y2={canvasY + canvasHeight + 4}
+      stroke="var(--dark-blue)"
+      stroke-width="6"
+      stroke-linecap="round"></line>
+
+    <!-- Canvas with shadow -->
+    <rect
+      id="canvas-area"
+      x={canvasX}
+      y={canvasY}
+      width={canvasWidth}
+      height={canvasHeight}
+      fill="#FFFFFF"
+      rx="2"
+      filter="url(#canvas-shadow)"></rect>
+
+    <!-- Paint trails container (clipped to canvas) -->
+    <g id="paint-container" clip-path="url(#canvas-clip)">
+      <!-- Paint strokes will be added here dynamically -->
+    </g>
+  </svg>
+</div>
+
+<style>
+  .easel-container {
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  #canvas-area {
+    cursor: crosshair;
+  }
+
+  .paint-stroke {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 12;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  const svg = document.getElementById("easel-svg");
+  const canvasArea = document.getElementById("canvas-area");
+  const paintContainer = document.getElementById("paint-container");
+
+  // Read canvas dimensions from data attributes (already calculated in Astro)
+  const canvasX = parseFloat(svg.dataset.canvasX);
+  const canvasY = parseFloat(svg.dataset.canvasY);
+  const canvasWidth = parseFloat(svg.dataset.canvasWidth);
+  const canvasHeight = parseFloat(svg.dataset.canvasHeight);
+
+  // Predefined paint colors
+  // Get CSS custom properties
+  const rootStyles = getComputedStyle(document.documentElement);
+  const colors = [
+    rootStyles.getPropertyValue("--yellow").trim(),
+    rootStyles.getPropertyValue("--light-pink").trim(),
+    rootStyles.getPropertyValue("--pink").trim(),
+    rootStyles.getPropertyValue("--dark-pink").trim(),
+    rootStyles.getPropertyValue("--light-blue").trim(),
+    rootStyles.getPropertyValue("--blue").trim(),
+    rootStyles.getPropertyValue("--light-purple").trim(),
+    rootStyles.getPropertyValue("--purple").trim(),
+    rootStyles.getPropertyValue("--dark-purple").trim(),
+  ];
+  let currentColorIndex = 0;
+  let isDrawing = false;
+  let currentPath = null;
+  let points = [];
+
+  // Get SVG coordinates from mouse event
+  function getSVGCoordinates(event) {
+    const CTM = svg.getScreenCTM();
+    return {
+      x: (event.clientX - CTM.e) / CTM.a,
+      y: (event.clientY - CTM.f) / CTM.d,
+    };
+  }
+
+  // Check if point is inside canvas area
+  function isInsideCanvas(x, y) {
+    return (
+      x >= canvasX &&
+      x <= canvasX + canvasWidth &&
+      y >= canvasY &&
+      y <= canvasY + canvasHeight
+    );
+  }
+
+  // Create simple path from points
+  function createSimplePath(points) {
+    if (points.length < 2) return "";
+
+    let path = `M ${points[0].x} ${points[0].y}`;
+
+    for (let i = 1; i < points.length; i++) {
+      path += ` L ${points[i].x} ${points[i].y}`;
+    }
+
+    return path;
+  }
+
+  // Mouse enter canvas - start new paint stroke with new color
+  canvasArea.addEventListener("mouseenter", (e) => {
+    isDrawing = true;
+    points = [];
+
+    // Cycle to next color
+    currentColorIndex = (currentColorIndex + 1) % colors.length;
+    const currentColor = colors[currentColorIndex];
+
+    // Create new path element
+    currentPath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path",
+    );
+    currentPath.classList.add("paint-stroke");
+    currentPath.setAttribute("stroke", currentColor);
+    currentPath.setAttribute("fill", "none");
+    currentPath.setAttribute("stroke-width", "12");
+    paintContainer.appendChild(currentPath);
+
+    // Fade in the stroke
+    gsap.fromTo(
+      currentPath,
+      {
+        opacity: 0,
+      },
+      {
+        opacity: 0.85,
+        duration: 0.3,
+        ease: "power2.out",
+      },
+    );
+
+    const coords = getSVGCoordinates(e);
+    if (isInsideCanvas(coords.x, coords.y)) {
+      points.push(coords);
+    }
+  });
+
+  // Mouse move - continue drawing
+  svg.addEventListener("mousemove", (e) => {
+    if (!isDrawing || !currentPath) return;
+
+    const coords = getSVGCoordinates(e);
+
+    if (isInsideCanvas(coords.x, coords.y)) {
+      points.push(coords);
+
+      // Update path
+      const pathData = createSimplePath(points);
+      currentPath.setAttribute("d", pathData);
+    }
+  });
+
+  // Mouse leave canvas - stop drawing
+  canvasArea.addEventListener("mouseleave", () => {
+    isDrawing = false;
+    currentPath = null;
+    points = [];
+  });
+
+  // Also stop on mouse leaving entire SVG
+  svg.addEventListener("mouseleave", () => {
+    isDrawing = false;
+    currentPath = null;
+    points = [];
+  });
+</script>
