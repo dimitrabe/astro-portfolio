@@ -1,7 +1,5 @@
 ---
 import { getCollection } from 'astro:content';
-
-import WebDesignLayout from '../../layouts/WebDesignLayout.astro';
 import PaintingLayout from '../../layouts/PaintingLayout.astro';
 
 export async function getStaticPaths() {
@@ -26,7 +24,6 @@ const { posts, category } = Astro.props;
 
 // Map categories to their respective layouts
 const layoutMap: Record<string, any> = {
-  'web-design': WebDesignLayout,
   'paintings': PaintingLayout,
   'graphic-design': PaintingLayout,
   // Add more categories here as you create them
