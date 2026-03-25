@@ -361,12 +361,12 @@ const { class: className } = Astro.props;
         top: 0%;
         left: 0%;
         transform: translateX(-50%);
-        border: 1px solid var(--dark-purple, #250e3b);
+        border: 1px solid var(--border-on-light, #250e3b);
         border-radius: 9999px;
         padding: 1em 2em;
         max-width: 30ch;
         text-align: center;
-        background: white;
+        background: var(--background-neutral-light);
         z-index: 10;
         transition:
             opacity 0.3s ease,
@@ -376,7 +376,6 @@ const { class: className } = Astro.props;
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .dialogue-bubble {
-            font-size: 0.875rem;
             padding: 0.75em 1.5em;
             max-width: 25ch;
 
@@ -480,7 +479,7 @@ const { class: className } = Astro.props;
     const tl_blink_right = createBlinkTimeline("right");
 
     // Mouse interaction
-    const person = document.querySelector(".girl-with-cat");
+    const person = document.querySelector(".girl-with-cat-wrapper");
 
     person?.addEventListener("mouseenter", () => {
         // Pause shape cycling

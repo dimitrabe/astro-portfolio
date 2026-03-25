@@ -11,15 +11,15 @@ const isHomepage = pathname === "/";
 		{
 			!isHomepage && (
 				<div class="internal-links">
-					<HeaderLink href="/">Home</HeaderLink>
-					<HeaderLink href="/paintings">Paintings</HeaderLink>
-					<HeaderLink href="/graphic-design">
-						Graphic Design
+					<HeaderLink class="body" href="/">home</HeaderLink>
+					<HeaderLink class="body" href="/paintings">paintings</HeaderLink>
+					<HeaderLink class="body" href="/graphic-design">
+						graphic design
 					</HeaderLink>
-					<a href="https://bedesignlab.com" target="_blank">
-						Web Design
+					<a class="body" href="https://bedesignlab.com" target="_blank">
+						web design
 					</a>
-					<HeaderLink href="/about">About</HeaderLink>
+					<HeaderLink class="body" href="/about">about</HeaderLink>
 				</div>
 			)
 		}
@@ -38,36 +38,22 @@ const isHomepage = pathname === "/";
 		position: fixed;  /* Only on homepage */
 	}
 
-	h2 {
-		margin: 0;
-		font-size: 1em;
-	}
-
-	h2 a,
-	h2 a.active {
-		text-decoration: none;
-	}
 	nav {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 	}
-	nav a {
-		padding: 1em 0.5em;
-		color: var(--black);
-		border-bottom: 4px solid transparent;
+
+	/* nav a {
+		padding: 0.5em 0.5em;
+		display: inline-block;
 		text-decoration: none;
+		color: var(--text-link-default);
 	}
 	nav a.active {
 		text-decoration: none;
-	}
-	.social-links,
-	.social-links a {
-		display: flex;
-	}
-	@media (max-width: 720px) {
-		.social-links {
-			display: none;
-		}
-	}
+		border: 1px solid var(--border-focus);
+		border-radius: var(--radius-default);
+		color: var(--text-link-active);
+	} */
 </style>

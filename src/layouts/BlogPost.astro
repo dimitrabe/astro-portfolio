@@ -1,14 +1,18 @@
 ---
-import { Image } from 'astro:assets';
-import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import Header from "../components/Header.astro";
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<"blog">["data"];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, category } =
+	Astro.props;
+
+// Create user-friendly slug from category
+const categorySlug = category.toLowerCase().replace("-", " ");
 ---
 
 <html lang="en">
@@ -18,26 +22,26 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			main {
 				width: calc(100% - 2em);
 				max-width: 100%;
-				margin: 0;
+				margin: 5vh 0;
 			}
+			article {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: 0 auto;
+			}
+
 			.hero-image {
 				width: 100%;
 			}
 			.hero-image img {
-				max-width: 600px;
 				width: 100%;
 				height: auto;
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
+				border-radius: 4px;
 				box-shadow: var(--box-shadow);
 			}
 			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
 				padding: 1em;
-				color: rgb(var(--gray-dark));
+				color: var(--text-on-light-primary);
 			}
 			.title {
 				margin-bottom: 1em;
@@ -48,12 +52,130 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			.title h1 {
 				margin: 0 0 0.5em 0;
 			}
+			.meta {
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+			}
+			.meta a {
+				color: var(--text-on-light-secondary);
+			}
 			.date {
-				margin-bottom: 0.5em;
+				padding: 0.5em 0.5em;
 				color: rgb(var(--gray));
+				color: var(--text-on-light-secondary);
 			}
 			.last-updated-on {
 				font-style: italic;
+				color: var(--text-on-light-secondary);
+			}
+			.prose :global(img) {
+				width: 100%;
+				height: auto;
+			}
+			.prose :global(h2) {
+				font-family: var(--heading-font-family);
+				font-weight: var(--heading-font-weight);
+				letter-spacing: var(--heading-letter-spacing);
+				font-size: clamp(
+					var(--heading-min-size) * 1px,
+					calc(
+						var(--heading-min-size) * 1px +
+							(
+								var(--heading-max-size) -
+									var(--heading-min-size)
+							) *
+							(100vw - var(--fluid-min-width) * 1px) /
+							(var(--fluid-max-width) - var(--fluid-min-width))
+					),
+					var(--heading-max-size) * 1px
+				);
+				line-height: clamp(
+					var(--heading-line-height-min) * 1px,
+					calc(
+						var(--heading-line-height-min) * 1px +
+							(
+								var(--heading-line-height-max) -
+									var(--heading-line-height-min)
+							) *
+							(100vw - var(--fluid-min-width) * 1px) /
+							(var(--fluid-max-width) - var(--fluid-min-width))
+					),
+					var(--heading-line-height-max) * 1px
+				);
+			}
+
+			.prose :global(h3) {
+				font-family: var(--small-heading-font-family);
+				font-weight: var(--small-heading-font-weight);
+				letter-spacing: var(--small-heading-letter-spacing);
+				font-size: clamp(
+					var(--small-heading-min-size) * 1px,
+					calc(
+						var(--small-heading-min-size) * 1px +
+							(
+								var(--small-heading-max-size) -
+									var(--small-heading-min-size)
+							) *
+							(100vw - var(--fluid-min-width) * 1px) /
+							(var(--fluid-max-width) - var(--fluid-min-width))
+					),
+					var(--small-heading-max-size) * 1px
+				);
+				line-height: clamp(
+					var(--small-heading-line-height-min) * 1px,
+					calc(
+						var(--small-heading-line-height-min) * 1px +
+							(
+								var(--small-heading-line-height-max) -
+									var(--small-heading-line-height-min)
+							) *
+							(100vw - var(--fluid-min-width) * 1px) /
+							(var(--fluid-max-width) - var(--fluid-min-width))
+					),
+					var(--small-heading-line-height-max) * 1px
+				);
+			}
+
+			.prose :global(p) {
+				font-family: var(--body-font-family);
+				font-weight: var(--body-font-weight-regular);
+				letter-spacing: var(--body-letter-spacing);
+				font-size: clamp(
+					var(--body-fluid-min-size) * 1px,
+					calc(
+						var(--body-fluid-min-size) * 1px +
+							(
+								var(--body-fluid-max-size) -
+									var(--body-fluid-min-size)
+							) *
+							(100vw - var(--fluid-min-width) * 1px) /
+							(var(--fluid-max-width) - var(--fluid-min-width))
+					),
+					var(--body-fluid-max-size) * 1px
+				);
+				line-height: var(--body-line-height-base) * 1px;
+			}
+
+			.prose :global(strong) {
+				font-family: var(--body-font-family);
+				font-weight: var(--body-font-weight-regular);
+				letter-spacing: var(--body-letter-spacing);
+				font-size: clamp(
+					var(--body-fluid-min-size) * 1px,
+					calc(
+						var(--body-fluid-min-size) * 1px +
+							(
+								var(--body-fluid-max-size) -
+									var(--body-fluid-min-size)
+							) *
+							(100vw - var(--fluid-min-width) * 1px) /
+							(var(--fluid-max-width) - var(--fluid-min-width))
+					),
+					var(--body-fluid-max-size) * 1px
+				);
+				line-height: var(--body-line-height-base) * 1px;
+				font-weight: var(--body-font-weight-strong);
 			}
 		</style>
 	</head>
@@ -63,22 +185,39 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<main>
 			<article>
 				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+					{
+						heroImage && (
+							<Image
+								width={1020}
+								height={510}
+								src={heroImage}
+								alt=""
+							/>
+						)
+					}
 				</div>
 				<div class="prose">
 					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
+						<div class="meta">
+							<a
+								href={`/${category}`}
+								class="category body-small"
+							>
+								{categorySlug}
+							</a>
+							<div class="date body-small">
+								<FormattedDate date={pubDate} />
+								{
+									updatedDate && (
+										<div class="last-updated-on">
+											Last updated on{" "}
+											<FormattedDate date={updatedDate} />
+										</div>
+									)
+								}
+							</div>
 						</div>
-						<h1>{title}</h1>
-						<hr />
+						<h1 class="title-page">{title}</h1>
 					</div>
 					<slot />
 				</div>
