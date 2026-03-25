@@ -1,19 +1,28 @@
 ---
-import { SITE_TITLE } from '../consts';
-import HeaderLink from './HeaderLink.astro';
-import Logo from './Logo.astro'; 
+import HeaderLink from "./HeaderLink.astro";
+import Logo from "./Logo.astro";
+const { pathname } = Astro.url;
+const isHomepage = pathname === "/";
 ---
 
-<header>
+<header class:list={[{ 'homepage': isHomepage }]}>
 	<nav>
-		<Logo/>
-		<div class="internal-links">
-			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/paintings">Paintings</HeaderLink>
-			<HeaderLink href="/graphic-design">Graphic Design</HeaderLink>
-			<a href="https://bedesignlab.com" target="_blank">Web Design</a>
-			<HeaderLink href="/about">About</HeaderLink>
-		</div>
+		<Logo />
+		{
+			!isHomepage && (
+				<div class="internal-links">
+					<HeaderLink href="/">Home</HeaderLink>
+					<HeaderLink href="/paintings">Paintings</HeaderLink>
+					<HeaderLink href="/graphic-design">
+						Graphic Design
+					</HeaderLink>
+					<a href="https://bedesignlab.com" target="_blank">
+						Web Design
+					</a>
+					<HeaderLink href="/about">About</HeaderLink>
+				</div>
+			)
+		}
 	</nav>
 </header>
 <style>
@@ -22,7 +31,13 @@ import Logo from './Logo.astro';
 		padding: 0 1em;
 		background: transparent;
 		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		position: static;  /* Default for all pages */
 	}
+
+	header.homepage {
+		position: fixed;  /* Only on homepage */
+	}
+
 	h2 {
 		margin: 0;
 		font-size: 1em;

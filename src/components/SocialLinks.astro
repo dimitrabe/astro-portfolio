@@ -1,4 +1,9 @@
+---
+import HeaderLink from './HeaderLink.astro';
+---
+
 <div class="social-links">
+	<HeaderLink href="/about">about</HeaderLink>
 	<a href="https://www.canva.com/design/DAF2UX1P7Ac/TzCinBYPIpmjyQi1EJJpyg/view" target="_blank">
 		resumé
 	</a>
@@ -10,5 +15,9 @@
 	</a>
 </div>
 <style>
-	
+	.social-links {
+		display: flex;
+		flex-flow: row wrap;
+		gap: 12px;
+	}
 </style>
