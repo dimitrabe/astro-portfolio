@@ -58,3 +58,31 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image.src, Astro.url)} />
+
+<script>
+		document.addEventListener('contextmenu', (e) => {
+			// Only disable on images
+			if (e.target.tagName === 'IMG') {
+				e.preventDefault();
+				
+				// Show custom message
+				const message = document.createElement('div');
+				message.textContent = '© All rights reserved. Contact me for licensing.';
+				message.style.cssText = `
+					position: fixed;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					background: var(--light-purple);
+					color: white;
+					padding: 20px 40px;
+					border-radius:var(--radius-default);
+					z-index: 9999;
+					font-family: var(--family-sans);
+				`;
+				document.body.appendChild(message);
+				
+				setTimeout(() => message.remove(), 2000);
+			}
+		});
+	</script>
