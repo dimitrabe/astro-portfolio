@@ -396,7 +396,7 @@ const { class: className } = Astro.props;
     const EYE_SHAPES = ["diamond", "square", "triangle", "star"];
 
     // Helper function to create shape cycling timeline for one eye
-    function createShapeCycleTimeline(side) {
+    function createShapeCycleTimeline(side: string) {
         const tl = gsap.timeline({ repeat: -1 });
 
         EYE_SHAPES.forEach((shape, index) => {
@@ -422,7 +422,7 @@ const { class: className } = Astro.props;
     }
 
     // Helper function to create blink timeline for one eye
-    function createBlinkTimeline(side) {
+    function createBlinkTimeline(side: string) {
         const tl = gsap.timeline({ repeat: -1, paused: true });
 
         // Open -> Closed -> Open

@@ -29,7 +29,7 @@ const layoutMap: Record<string, any> = {
   // Add more categories here as you create them
 };
 
-const Layout = layoutMap[category] || WebDesignLayout; // Fallback to default layout
+const Layout = layoutMap[category] || PaintingLayout; // Fallback to default layout
 ---
 
 <Layout title={`${category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')} Posts`} category={category}>

@@ -99,15 +99,27 @@ const canvasHeight = Math.round(svgHeight * 0.8);
 <script>
   import { gsap } from "gsap";
 
-  const svg = document.getElementById("easel-svg");
-  const canvasArea = document.getElementById("canvas-area");
-  const paintContainer = document.getElementById("paint-container");
+  // Type definitions
+  interface Point {
+    x: number;
+    y: number;
+  }
+
+  const svg = document.getElementById("easel-svg") as SVGSVGElement | null;
+  const canvasArea = document.getElementById("canvas-area") as SVGRectElement | null;
+  const paintContainer = document.getElementById("paint-container") as SVGGElement | null;
+
+  // Guard clause - exit if elements not found
+  if (!svg || !canvasArea || !paintContainer) {
+    console.error("Required SVG elements not found");
+    throw new Error("Required SVG elements not found");
+  }
 
   // Read canvas dimensions from data attributes (already calculated in Astro)
-  const canvasX = parseFloat(svg.dataset.canvasX);
-  const canvasY = parseFloat(svg.dataset.canvasY);
-  const canvasWidth = parseFloat(svg.dataset.canvasWidth);
-  const canvasHeight = parseFloat(svg.dataset.canvasHeight);
+  const canvasX = parseFloat(svg.dataset.canvasX || "0");
+  const canvasY = parseFloat(svg.dataset.canvasY || "0");
+  const canvasWidth = parseFloat(svg.dataset.canvasWidth || "0");
+  const canvasHeight = parseFloat(svg.dataset.canvasHeight || "0");
 
   // Predefined paint colors
   // Get CSS custom properties
@@ -125,12 +137,16 @@ const canvasHeight = Math.round(svgHeight * 0.8);
   ];
   let currentColorIndex = 0;
   let isDrawing = false;
-  let currentPath = null;
-  let points = [];
+  let currentPath: SVGPathElement | null = null;
+  let points: Point[] = [];
 
   // Get SVG coordinates from mouse event
-  function getSVGCoordinates(event) {
+  function getSVGCoordinates(event: MouseEvent): Point {
+    if (!svg) return { x: 0, y: 0 };
     const CTM = svg.getScreenCTM();
+    if (!CTM) {
+      return { x: 0, y: 0 };
+    }
     return {
       x: (event.clientX - CTM.e) / CTM.a,
       y: (event.clientY - CTM.f) / CTM.d,
@@ -138,7 +154,7 @@ const canvasHeight = Math.round(svgHeight * 0.8);
   }
 
   // Check if point is inside canvas area
-  function isInsideCanvas(x, y) {
+  function isInsideCanvas(x: number, y: number): boolean {
     return (
       x >= canvasX &&
       x <= canvasX + canvasWidth &&
@@ -148,7 +164,7 @@ const canvasHeight = Math.round(svgHeight * 0.8);
   }
 
   // Create simple path from points
-  function createSimplePath(points) {
+  function createSimplePath(points: Point[]): string {
     if (points.length < 2) return "";
 
     let path = `M ${points[0].x} ${points[0].y}`;
@@ -161,7 +177,7 @@ const canvasHeight = Math.round(svgHeight * 0.8);
   }
 
   // Mouse enter canvas - start new paint stroke with new color
-  canvasArea.addEventListener("mouseenter", (e) => {
+  canvasArea.addEventListener("mouseenter", (e: MouseEvent) => {
     isDrawing = true;
     points = [];
 
@@ -200,7 +216,7 @@ const canvasHeight = Math.round(svgHeight * 0.8);
   });
 
   // Mouse move - continue drawing
-  svg.addEventListener("mousemove", (e) => {
+  svg.addEventListener("mousemove", (e: MouseEvent) => {
     if (!isDrawing || !currentPath) return;
 
     const coords = getSVGCoordinates(e);
