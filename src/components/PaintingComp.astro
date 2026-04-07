@@ -28,13 +28,13 @@ const canvasHeight = Math.round(svgHeight * 0.8);
           rx="2"></rect>
       </clipPath>
       <filter id="canvas-shadow" x="-50%" y="-50%" width="200%" height="200%">
-        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.3"
+        <feDropShadow dx="12" dy="12" stdDeviation="0" flood-opacity="1" flood-color="var(--dark-purple)"
         ></feDropShadow>
       </filter>
     </defs>
 
     <!-- Easel legs -->
-    <line
+    <!-- <line
       x1={canvasX + 0.2 * canvasWidth}
       y1={svgHeight}
       x2={svgWidth * 0.5}
@@ -57,7 +57,7 @@ const canvasHeight = Math.round(svgHeight * 0.8);
       y2={canvasY + canvasHeight + 4}
       stroke="var(--dark-blue)"
       stroke-width="6"
-      stroke-linecap="round"></line>
+      stroke-linecap="round"></line> -->
 
     <!-- Canvas with shadow -->
     <rect
