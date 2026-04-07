@@ -7,6 +7,7 @@ import GraphicDesignComp from '../components/GraphicDesignComp.astro';
 import WebDesignComp from '../components/WebDesignComp.astro';
 import PaintingComp from '../components/PaintingComp.astro';
 import GirlwithCatSpeaking from '../components/GirlwithCatSpeaking.astro';
+import EyeFollower from '../components/EyeFollower.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 ---
 
@@ -21,6 +22,9 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 			<GirlwithCatSpeaking class="girl-w-cat-position"/>
 			<HeaderLink href="/graphic-design" class="graphic-design-position" aria-label="View Graphic Design portfolio">
 				<GraphicDesignComp />
+			</HeaderLink>
+			<HeaderLink href="/animation" class="eye-follower-position" aria-label="View animation portfolio">
+				<EyeFollower size={100} strokeColor="var(--dark-purple)" eyeballColor="var(--dark-purple)" eyeballHoverColor="var(--light-blue)" strokeWidth={5} />
 			</HeaderLink>
 			<a href="https://bedesignlab.com" target="_blank" class="web-design-position" aria-label="Visit be design lab website (opens in new tab)"
 				rel="noopener noreferrer">
@@ -76,6 +80,11 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 			align-items: center;
 			justify-content: center;
 			transition: transform 0.3s ease;
+		}
+
+		.eye-follower-position {
+			grid-column: 6 / 8;
+			grid-row: 2 / 3;
 		}
 
 		/* KEYBOARD FOCUS STYLES - CRITICAL FOR ACCESSIBILITY */

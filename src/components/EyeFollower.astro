@@ -1,0 +1,127 @@
+---
+interface Props {
+  size?: number;
+  strokeColor?: string;
+  eyeballColor?: string;
+  eyeballHoverColor?: string;
+  strokeWidth?: number;
+}
+
+const {
+  size = 200,
+  strokeColor = 'currentColor',
+  eyeballColor = 'currentColor',
+  eyeballHoverColor = 'red',
+  strokeWidth = 3,
+} = Astro.props;
+
+// ViewBox: 0 0 200 100 — eye centered at (100, 50)
+// Lens tips at (10, 50) and (190, 50): half-width a=90, half-height b=30
+// Arc radius r = (a² + b²) / (2b) = (8100 + 900) / 60 = 150
+// Path: two arcs of r=150 meeting at the tips, one curving up, one curving down
+const EYEBALL_RADIUS = 30;
+---
+
+<svg
+  id="eye-follower"
+  viewBox="0 0 200 100"
+  width={size}
+  height={size / 2}
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+>
+  <!-- Almond/lens shaped eye outline (intersection of two circles) -->
+  <path
+    d="M 10,50 A 112,112 0 0,1 190,50 A 112,112 0 0,1 10,50 Z"
+    style={`fill: none; stroke: ${strokeColor}; stroke-width: ${strokeWidth}`}
+  />
+  <!-- Eyeball: filled, follows cursor -->
+  <circle
+    id="eyeball"
+    cx="100"
+    cy="50"
+    r={EYEBALL_RADIUS}
+    data-radius={EYEBALL_RADIUS}
+    data-color={eyeballColor}
+    data-hover-color={eyeballHoverColor}
+    style={`fill: ${eyeballColor}`}
+  />
+</svg>
+
+<script>
+  import { gsap } from 'gsap';
+
+  // ViewBox dimensions and eye center
+  const VIEW_WIDTH = 200;
+  const VIEW_HEIGHT = 100;
+  const CENTER_X = 100;
+  const CENTER_Y = 50;
+
+  // Eyeball circular travel constraint (radius 14 from center keeps the
+  // eyeball fully inside the lens at all angles — verified against lens bounds)
+  const MAX_DIST = 14;
+
+  const svg = document.getElementById('eye-follower') as unknown as SVGSVGElement;
+  const eyeball = document.getElementById('eyeball') as unknown as SVGCircleElement;
+
+  const EYEBALL_RADIUS = Number(eyeball.dataset.radius);
+  const EYEBALL_COLOR = eyeball.dataset.color ?? 'currentColor';
+  const EYEBALL_HOVER_COLOR = eyeball.dataset.hoverColor ?? 'red';
+
+  let cursorX = window.innerWidth / 2;
+  let cursorY = window.innerHeight / 2;
+
+  document.addEventListener('mousemove', (e) => {
+    cursorX = e.clientX;
+    cursorY = e.clientY;
+  });
+
+  gsap.ticker.add(() => {
+    const rect = svg.getBoundingClientRect();
+
+    const centerScreenX = rect.left + rect.width / 2;
+    const centerScreenY = rect.top + rect.height / 2;
+
+    const dx = cursorX - centerScreenX;
+    const dy = cursorY - centerScreenY;
+
+    // Convert screen pixels to SVG user units (non-square viewBox, so X/Y scales differ)
+    const scaleX = VIEW_WIDTH / rect.width;
+    const scaleY = VIEW_HEIGHT / rect.height;
+    const dxSVG = dx * scaleX;
+    const dySVG = dy * scaleY;
+    const distSVG = Math.sqrt(dxSVG * dxSVG + dySVG * dySVG);
+
+    let targetX: number;
+    let targetY: number;
+
+    if (distSVG === 0 || distSVG < MAX_DIST) {
+      targetX = CENTER_X + dxSVG;
+      targetY = CENTER_Y + dySVG;
+    } else {
+      targetX = CENTER_X + (dxSVG / distSVG) * MAX_DIST;
+      targetY = CENTER_Y + (dySVG / distSVG) * MAX_DIST;
+    }
+
+    gsap.to(eyeball, {
+      attr: { cx: targetX, cy: targetY },
+      duration: 0.15,
+      ease: 'power2.out',
+      overwrite: true,
+    });
+
+    // Cursor position in SVG units (relative to SVG top-left, not center)
+    const cursorSVG_X = (cursorX - rect.left) * scaleX;
+    const cursorSVG_Y = (cursorY - rect.top) * scaleY;
+    const dxEye = cursorSVG_X - targetX;
+    const dyEye = cursorSVG_Y - targetY;
+    const distEye = Math.sqrt(dxEye * dxEye + dyEye * dyEye);
+
+    const isHovered = distEye < EYEBALL_RADIUS;
+    gsap.to(eyeball, {
+      fill: isHovered ? EYEBALL_HOVER_COLOR : EYEBALL_COLOR,
+      duration: 0.2,
+      overwrite: 'auto',
+    });
+  });
+</script>
