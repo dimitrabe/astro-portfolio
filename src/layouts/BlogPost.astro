@@ -8,7 +8,7 @@ import Header from "../components/Header.astro";
 
 type Props = CollectionEntry<"blog">["data"];
 
-const { title, description, pubDate, updatedDate, heroImage, category } =
+const { title, description, pubDate, updatedDate, heroImage, heroVideo, category } =
 	Astro.props;
 
 // Create user-friendly slug from category
@@ -185,16 +185,19 @@ const categorySlug = category.toLowerCase().replace("-", " ");
 		<main>
 			<article>
 				<div class="hero-image">
-					{
-						heroImage && (
-							<Image
-								width={1020}
-								height={510}
-								src={heroImage}
-								alt=""
-							/>
-						)
-					}
+					{heroImage && !heroVideo && (
+						<Image width={1020} height={510} src={heroImage} alt="" />
+					)}
+					{heroVideo && (
+						<iframe
+							width="100%"
+							height="510"
+							src={heroVideo}
+							title={title}
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+							allowfullscreen
+						/>
+					)}
 				</div>
 				<div class="prose">
 					<div class="title">
