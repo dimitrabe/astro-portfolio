@@ -37,13 +37,25 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		<Footer />
 	</body>
 	<style>
+		:global(html), :global(body) {
+			height: 100vh;
+			margin: 0;
+			overflow: hidden;
+		}
+
+		:global(body) {
+			display: flex;
+			flex-direction: column;
+		}
+
 		main {
 			display: grid;
 			grid-template-columns: repeat(12, 1fr);
 			grid-template-rows: repeat(12, 1fr);
-			height: 95vh;
+			flex: 1;
 			gap: 1rem;
 			padding-top: 2px;
+			min-height: 0;
 		}		
  
 		/* Girl with Cat - centered, occupies middle third */
@@ -164,6 +176,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 				height: auto;
 				gap: 2rem;
 				padding: 1rem;
+				justify-content: center;
 			}
  
 			:global(.girl-w-cat-position),
@@ -178,15 +191,10 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 				order: 1;
 			}
 
-			.web-design-position {
-				display: none;
-			}
- 
-			.graphic-design-position {
-				display: none;
-			}
-
-			.painting-position {
+			.web-design-position,
+			.graphic-design-position,
+			.painting-position,
+			.eye-follower-position {
 				display: none;
 			}
 

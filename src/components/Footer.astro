@@ -16,10 +16,18 @@ import SocialLinks from '../components/SocialLinks.astro';
 		padding: 0 1em 1em 1em;
 		color: rgb(var(--gray));
 		text-align: center;
-	}	
+	}
 	footer > p {
 		padding: 0;
 		margin: 0;
 		text-align: left;
+	}
+	@media (max-width: 768px) {
+		footer {
+			justify-content: center;
+		}
+		footer :global(.social-links) {
+			display: none;
+		}
 	}
 </style>

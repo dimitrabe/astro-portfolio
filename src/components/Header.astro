@@ -1,6 +1,7 @@
 ---
 import HeaderLink from "./HeaderLink.astro";
 import Logo from "./Logo.astro";
+import SocialLinks from "./SocialLinks.astro";
 const { pathname } = Astro.url;
 const isHomepage = pathname === "/";
 ---
@@ -9,35 +10,74 @@ const isHomepage = pathname === "/";
 	<nav>
 		<Logo />
 		{
-			!isHomepage && (
-				<div class="internal-links">
-					<HeaderLink class="body" href="/">home</HeaderLink>
-					<HeaderLink class="body" href="/paintings">paintings</HeaderLink>
-					<HeaderLink class="body" href="/graphic-design">
-						graphic design
-					</HeaderLink>
-					<HeaderLink class="body" href="/animation">animation</HeaderLink>
-					<a class="body" href="https://bedesignlab.com" target="_blank">
-						web design
-					</a>
-					<HeaderLink class="body" href="/about">about</HeaderLink>
-				</div>
-			)
+			
+					<button class="burger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+						<span></span>
+						<span></span>
+						<span></span>
+					</button>
+					<div class="internal-links" id="nav-links">
+						<HeaderLink class="body" href="/">home</HeaderLink>
+						<HeaderLink class="body" href="/paintings">paintings</HeaderLink>
+						<HeaderLink class="body" href="/graphic-design">
+							graphic design
+						</HeaderLink>
+						<HeaderLink class="body" href="/animation">animation</HeaderLink>
+						<a class="body" href="https://bedesignlab.com" target="_blank">
+							web design
+						</a>
+						<HeaderLink class="body" href="/about">about</HeaderLink>
+						<div class="burger-social">
+							<SocialLinks />
+						</div>
+					</div>
+				
 		}
 	</nav>
 </header>
+
+<script>
+	const burger = document.querySelector('.burger') as HTMLButtonElement | null;
+	const navLinks = document.querySelector('#nav-links') as HTMLElement | null;
+
+	const header = document.querySelector('header') as HTMLElement | null;
+
+	function setHeaderHeight() {
+		if (header) {
+			document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`);
+		}
+	}
+	setHeaderHeight();
+	window.addEventListener('resize', setHeaderHeight);
+
+	burger?.addEventListener('click', () => {
+		const isOpen = navLinks?.classList.toggle('open');
+		burger.setAttribute('aria-expanded', String(isOpen));
+		burger.classList.toggle('active', isOpen);
+	});
+
+	// Close menu when a link is clicked
+	navLinks?.querySelectorAll('a').forEach(link => {
+		link.addEventListener('click', () => {
+			navLinks.classList.remove('open');
+			burger?.classList.remove('active');
+			burger?.setAttribute('aria-expanded', 'false');
+		});
+	});
+</script>
+
 <style>
 	header {
 		margin: 0;
-		padding: 0 1em;
+		padding: 0.5em 1em;
 		background: transparent;
 		box-shadow: 0 2px 8px rgba(var(--black), 5%);
-		position: static;  /* Default for all pages */
+		position: static;
 	}
 
-	header.homepage {
-		position: fixed;  /* Only on homepage */
-	}
+	/* header.homepage {
+		position: fixed;
+	} */
 
 	nav {
 		display: flex;
@@ -45,16 +85,79 @@ const isHomepage = pathname === "/";
 		justify-content: space-between;
 	}
 
-	/* nav a {
-		padding: 0.5em 0.5em;
-		display: inline-block;
-		text-decoration: none;
-		color: var(--text-link-default);
+	.burger-social {
+		display: none;
 	}
-	nav a.active {
-		text-decoration: none;
-		border: 1px solid var(--border-focus);
-		border-radius: var(--radius-default);
-		color: var(--text-link-active);
-	} */
+
+	.burger {
+		display: none;
+		flex-direction: column;
+		justify-content: center;
+		gap: 5px;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0.5em;
+		z-index: 100;
+	}
+
+	.burger span {
+		display: block;
+		width: 24px;
+		height: 2px;
+		background-color: var(--text-on-light-primary);
+		transition: transform 0.25s ease, opacity 0.25s ease;
+		transform-origin: center;
+	}
+
+	.burger.active span:nth-child(1) {
+		transform: translateY(7px) rotate(45deg);
+	}
+	.burger.active span:nth-child(2) {
+		opacity: 0;
+	}
+	.burger.active span:nth-child(3) {
+		transform: translateY(-7px) rotate(-45deg);
+	}
+
+	@media (max-width: 768px) {
+		.burger {
+			display: flex;
+		}
+
+		header {
+			position: relative;
+		}
+
+		/* header.homepage {
+			position: fixed;
+		} */
+
+		.internal-links {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			position: absolute;
+			top: var(--header-height, 60px);
+			right: 0;
+			left: 0;
+			width: 180px;
+			height: calc(100vh - var(--header-height, 60px));
+			background: var(--neutrals-100);
+			padding: 2em 0;
+			gap: 1.5em;
+			z-index: 99;
+			transform-origin: 0% 0%;
+			transform: translate(210%, 0);
+			transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+		}
+
+		.internal-links.open {
+			transform: translate(110%, 0);
+		}
+
+		.burger-social {
+			display: block;
+		}
+	}
 </style>

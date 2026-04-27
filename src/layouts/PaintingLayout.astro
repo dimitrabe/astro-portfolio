@@ -29,8 +29,9 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			justify-content: space-evenly;
 			gap: var(--g);
 			width: 100vw;
-			padding: 0;
+			padding: 0 1em 0 1em;
 			margin: 0;
+			box-sizing: border-box;
 		}
 
 		/* Hide article container styling, show only images */
@@ -49,6 +50,13 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			filter: grayscale(90%);
 			transition: 0.35s linear;
 			display: block;
+		}
+
+		@media (max-width: 768px) {
+			main :global(.posts-grid .post-image) {
+				width: 100%;
+				height: auto;
+			}
 		}
 
 		main :global(.posts-grid .post-image:hover) {

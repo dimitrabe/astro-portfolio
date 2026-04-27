@@ -353,6 +353,12 @@
 	font-size: var(--body-size-small) * 1px;
 	line-height: var(--body-line-height-small) * 1px;
 }
+/* Mobile Responsive */
+		@media (max-width: 768px) {
+			.body-small {
+				font-size: 12px;
+			}
+		}
 
 .body-strong {
 	font-weight: var(--body-font-weight-strong);
@@ -464,7 +470,7 @@
 
 
 a {
-	padding: 0.5em 1em;
+	/* padding: 0.5em 1em; */
 	display: inline-block;
 	text-decoration: none;
 	color: var(--text-link-default);
@@ -482,4 +488,5 @@ main {
 		}
 body {
 	background-color: var(--background-neutral-light);
+	margin: 0;
 }

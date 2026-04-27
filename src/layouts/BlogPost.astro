@@ -8,8 +8,15 @@ import Header from "../components/Header.astro";
 
 type Props = CollectionEntry<"blog">["data"];
 
-const { title, description, pubDate, updatedDate, heroImage, heroVideo, category } =
-	Astro.props;
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+	heroVideo,
+	category,
+} = Astro.props;
 
 // Create user-friendly slug from category
 const categorySlug = category.toLowerCase().replace("-", " ");
@@ -20,13 +27,15 @@ const categorySlug = category.toLowerCase().replace("-", " ");
 		<BaseHead title={title} description={description} />
 		<style>
 			main {
-				width: calc(100% - 2em);
+				box-sizing: border-box;
 				max-width: 100%;
 				margin: 5vh 0;
+				padding: 0 1em 0 1em;
 			}
 			article {
-				width: 720px;
-				max-width: calc(100% - 2em);
+				box-sizing: border-box;
+				width: 100%;
+				max-width: 720px;
 				margin: 0 auto;
 			}
 
@@ -185,19 +194,28 @@ const categorySlug = category.toLowerCase().replace("-", " ");
 		<main>
 			<article>
 				<div class="hero-image">
-					{heroImage && !heroVideo && (
-						<Image width={1020} height={510} src={heroImage} alt="" />
-					)}
-					{heroVideo && (
-						<iframe
-							width="100%"
-							height="510"
-							src={heroVideo}
-							title={title}
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-							allowfullscreen
-						/>
-					)}
+					{
+						heroImage && !heroVideo && (
+							<Image
+								width={1020}
+								height={510}
+								src={heroImage}
+								alt=""
+							/>
+						)
+					}
+					{
+						heroVideo && (
+							<iframe
+								width="100%"
+								height="510"
+								src={heroVideo}
+								title={title}
+								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+								allowfullscreen
+							/>
+						)
+					}
 				</div>
 				<div class="prose">
 					<div class="title">
