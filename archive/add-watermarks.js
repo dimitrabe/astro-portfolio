@@ -3,7 +3,7 @@ import sharp from 'sharp';
 import { readdir } from 'fs/promises';
 import path from 'path';
 
-const inputDir = './src/assets/paintings';
+const inputDir = './src/assets/paintings/to-be-uploaded';
 const outputDir = './src/assets/paintings/watermarked';
 const watermarkText = '© Dimitra Be';
 

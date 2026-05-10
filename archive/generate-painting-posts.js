@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Configuration
-const PAINTINGS_DIR = path.join(__dirname, 'src/assets/paintings');
+const PAINTINGS_DIR = path.join(__dirname, 'src/assets/paintings/watermarked');
 const BLOG_DIR = path.join(__dirname, 'src/content/blog');
 const CATEGORY = 'paintings';
 const TARGET_HEIGHT = 500; // Target height in pixels
