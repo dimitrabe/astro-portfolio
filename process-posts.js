@@ -52,17 +52,20 @@ function buildWatermarkSvg() {
 }
 
 async function processImage(inputPath, outputPath) {
-  const metadata = await sharp(inputPath).metadata();
-  const aspectRatio = metadata.width / metadata.height;
+  const isAnimated = path.extname(inputPath).toLowerCase() === '.gif';
+  const sharpOpts = { animated: isAnimated, limitInputPixels: false };
+  const metadata = await sharp(inputPath, sharpOpts).metadata();
+  const frameHeight = metadata.pageHeight ?? metadata.height;
+  const aspectRatio = metadata.width / frameHeight;
   const targetWidth = Math.round(TARGET_HEIGHT * aspectRatio);
 
-  console.log(`   📐 Original: ${metadata.width}x${metadata.height}px`);
+  console.log(`   📐 Original: ${metadata.width}x${frameHeight}px${isAnimated ? ` (${metadata.pages} frames)` : ''}`);
   console.log(`   📐 Resized:  ${targetWidth}x${TARGET_HEIGHT}px`);
 
-  await sharp(inputPath)
+  await sharp(inputPath, sharpOpts)
     .resize({ width: targetWidth, height: TARGET_HEIGHT, fit: 'cover' })
     .webp({ quality: WEBP_QUALITY })
-    .composite([{ input: buildWatermarkSvg(), gravity: 'southeast' }])
+    .composite(isAnimated ? [] : [{ input: buildWatermarkSvg(), gravity: 'southeast' }])
     .toFile(outputPath);
 
   const originalSize = fs.statSync(inputPath).size;
