@@ -196,10 +196,10 @@ const categorySlug = category.toLowerCase().replace("-", " ");
 				<div class="hero-image">
 					{
 						heroImage && !heroVideo && (
-							<Image
-								width={1020}
-								height={510}
-								src={heroImage}
+							<img
+								src={heroImage.src}
+								width={heroImage.width}
+								height={heroImage.height}
 								alt=""
 							/>
 						)
