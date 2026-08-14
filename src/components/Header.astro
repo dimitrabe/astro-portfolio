@@ -16,7 +16,7 @@ const isHomepage = pathname === "/";
 						<span></span>
 						<span></span>
 					</button>
-					<div class="internal-links" id="nav-links">
+					<div class="internal-links" id="nav-links" aria-hidden="true">
 						<HeaderLink class="body" href="/">home</HeaderLink>
 						<HeaderLink class="body" href="/paintings">paintings</HeaderLink>
 						<HeaderLink class="body" href="/graphic-design">
@@ -54,12 +54,14 @@ const isHomepage = pathname === "/";
 		const isOpen = navLinks?.classList.toggle('open');
 		burger.setAttribute('aria-expanded', String(isOpen));
 		burger.classList.toggle('active', isOpen);
+		navLinks?.setAttribute('aria-hidden', String(!isOpen));
 	});
 
 	// Close menu when a link is clicked
 	navLinks?.querySelectorAll('a').forEach(link => {
 		link.addEventListener('click', () => {
 			navLinks.classList.remove('open');
+			navLinks.setAttribute('aria-hidden', 'true');
 			burger?.classList.remove('active');
 			burger?.setAttribute('aria-expanded', 'false');
 		});
@@ -137,23 +139,24 @@ const isHomepage = pathname === "/";
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			position: absolute;
+			position: fixed;
 			top: var(--header-height, 60px);
 			right: 0;
-			left: 0;
+			left: auto;
 			width: 180px;
 			height: calc(100vh - var(--header-height, 60px));
 			background: var(--neutrals-100);
 			padding: 2em 0;
 			gap: 1.5em;
 			z-index: 99;
-			transform-origin: 0% 0%;
-			transform: translate(210%, 0);
-			transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+			transform: translateX(100%);
+			visibility: hidden;
+			transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0), visibility 0.5s;
 		}
 
 		.internal-links.open {
-			transform: translate(110%, 0);
+			transform: translateX(0);
+			visibility: visible;
 		}
 
 		.burger-social {

@@ -486,6 +486,11 @@ main {
 			min-height: 88vh;
 			
 		}
+html,
+body {
+	overflow-x: hidden;
+}
+
 body {
 	background-color: var(--background-neutral-light);
 	margin: 0;
