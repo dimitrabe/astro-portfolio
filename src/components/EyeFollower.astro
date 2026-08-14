@@ -1,127 +1,97 @@
 ---
+import spriteSrc from '../assets/eye/sprite.png';
+
 interface Props {
-  size?: number;
-  strokeColor?: string;
-  eyeballColor?: string;
-  eyeballHoverColor?: string;
-  strokeWidth?: number;
+  ariaLabel?: string;
 }
 
-const {
-  size = 200,
-  strokeColor = 'currentColor',
-  eyeballColor = 'currentColor',
-  eyeballHoverColor = 'red',
-  strokeWidth = 3,
-} = Astro.props;
+const { ariaLabel = 'Animated eye that follows your cursor' } = Astro.props;
 
-// ViewBox: 0 0 200 100 — eye centered at (100, 50)
-// Lens tips at (10, 50) and (190, 50): half-width a=90, half-height b=30
-// Arc radius r = (a² + b²) / (2b) = (8100 + 900) / 60 = 150
-// Path: two arcs of r=150 meeting at the tips, one curving up, one curving down
-const EYEBALL_RADIUS = 30;
+// Sprite sheet: 5 columns x 3 rows, each cell 595x421px
+const COLS = 5;
+const ROWS = 3;
+const CELL_WIDTH = 595;
+const CELL_HEIGHT = 421;
 ---
 
-<svg
+<div
   id="eye-follower"
-  viewBox="0 0 200 100"
-  width={size}
-  height={size / 2}
-  xmlns="http://www.w3.org/2000/svg"
-  aria-hidden="true"
+  role="img"
+  aria-label={ariaLabel}
+  data-cols={COLS}
+  data-rows={ROWS}
+  style={`width: 100%; height: auto; max-width: 100%; aspect-ratio: ${CELL_WIDTH} / ${CELL_HEIGHT}; background-image: url(${spriteSrc.src}); background-size: ${COLS * 100}% ${ROWS * 100}%; background-repeat: no-repeat; background-position: 0% 0%; overflow: hidden;`}
 >
-  <!-- Almond/lens shaped eye outline (intersection of two circles) -->
-  <path
-    d="M 10,50 A 112,112 0 0,1 190,50 A 112,112 0 0,1 10,50 Z"
-    style={`fill: none; stroke: ${strokeColor}; stroke-width: ${strokeWidth}`}
-  />
-  <!-- Eyeball: filled, follows cursor -->
-  <circle
-    id="eyeball"
-    cx="100"
-    cy="50"
-    r={EYEBALL_RADIUS}
-    data-radius={EYEBALL_RADIUS}
-    data-color={eyeballColor}
-    data-hover-color={eyeballHoverColor}
-    style={`fill: ${eyeballColor}`}
-  />
-</svg>
+</div>
 
 <script>
-  import { gsap } from 'gsap';
+  const COLS = 5;
+  const ROWS = 3;
 
-  // ViewBox dimensions and eye center
-  const VIEW_WIDTH = 200;
-  const VIEW_HEIGHT = 100;
-  const CENTER_X = 100;
-  const CENTER_Y = 50;
-
-  // Eyeball circular travel constraint (radius 14 from center keeps the
-  // eyeball fully inside the lens at all angles — verified against lens bounds)
-  const MAX_DIST = 14;
-
-  const svg = document.getElementById('eye-follower') as unknown as SVGSVGElement;
-  const eyeball = document.getElementById('eyeball') as unknown as SVGCircleElement;
-
-  const EYEBALL_RADIUS = Number(eyeball.dataset.radius);
-  const EYEBALL_COLOR = eyeball.dataset.color ?? 'currentColor';
-  const EYEBALL_HOVER_COLOR = eyeball.dataset.hoverColor ?? 'red';
+  const eye = document.getElementById('eye-follower') as HTMLDivElement;
 
   let cursorX = window.innerWidth / 2;
   let cursorY = window.innerHeight / 2;
+  let lastCol = -1;
+  let lastRow = -1;
 
   document.addEventListener('mousemove', (e) => {
     cursorX = e.clientX;
     cursorY = e.clientY;
   });
 
-  gsap.ticker.add(() => {
-    const rect = svg.getBoundingClientRect();
+  // Center cell of the grid — reserved exclusively for the hover state
+  const CENTER_COL = Math.floor(COLS / 2);
+  const CENTER_ROW = Math.floor(ROWS / 2);
 
-    const centerScreenX = rect.left + rect.width / 2;
-    const centerScreenY = rect.top + rect.height / 2;
+  function tick() {
+    const rect = eye.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
 
-    const dx = cursorX - centerScreenX;
-    const dy = cursorY - centerScreenY;
+    const isHovered =
+      cursorX >= rect.left && cursorX <= rect.right && cursorY >= rect.top && cursorY <= rect.bottom;
 
-    // Convert screen pixels to SVG user units (non-square viewBox, so X/Y scales differ)
-    const scaleX = VIEW_WIDTH / rect.width;
-    const scaleY = VIEW_HEIGHT / rect.height;
-    const dxSVG = dx * scaleX;
-    const dySVG = dy * scaleY;
-    const distSVG = Math.sqrt(dxSVG * dxSVG + dySVG * dySVG);
+    let col: number;
+    let row: number;
 
-    let targetX: number;
-    let targetY: number;
-
-    if (distSVG === 0 || distSVG < MAX_DIST) {
-      targetX = CENTER_X + dxSVG;
-      targetY = CENTER_Y + dySVG;
+    if (isHovered) {
+      col = CENTER_COL;
+      row = CENTER_ROW;
     } else {
-      targetX = CENTER_X + (dxSVG / distSVG) * MAX_DIST;
-      targetY = CENTER_Y + (dySVG / distSVG) * MAX_DIST;
+      const dx = cursorX - centerX;
+      const dy = cursorY - centerY;
+
+      // Normalize against the distance from the eye's own center to the
+      // nearest viewport edge in that direction — not the viewport's
+      // center — so every row/column is reachable regardless of where
+      // the eye sits on the page.
+      const maxX = dx < 0 ? centerX : window.innerWidth - centerX;
+      const maxY = dy < 0 ? centerY : window.innerHeight - centerY;
+
+      const normX = Math.max(-1, Math.min(1, maxX === 0 ? 0 : dx / maxX));
+      const normY = Math.max(-1, Math.min(1, maxY === 0 ? 0 : dy / maxY));
+
+      col = Math.round(((normX + 1) / 2) * (COLS - 1));
+      row = Math.round(((normY + 1) / 2) * (ROWS - 1));
+
+      // The center cell is reserved for hover — nudge away from it so
+      // tracking never accidentally lands on the hover frame.
+      if (col === CENTER_COL && row === CENTER_ROW) {
+        row = dy < 0 ? CENTER_ROW - 1 : CENTER_ROW + 1;
+      }
     }
 
-    gsap.to(eyeball, {
-      attr: { cx: targetX, cy: targetY },
-      duration: 0.15,
-      ease: 'power2.out',
-      overwrite: true,
-    });
+    if (col !== lastCol || row !== lastRow) {
+      lastCol = col;
+      lastRow = row;
+      const posX = (col / (COLS - 1)) * 100;
+      const posY = (row / (ROWS - 1)) * 100;
+      eye.style.backgroundPosition = `${posX}% ${posY}%`;
+    }
 
-    // Cursor position in SVG units (relative to SVG top-left, not center)
-    const cursorSVG_X = (cursorX - rect.left) * scaleX;
-    const cursorSVG_Y = (cursorY - rect.top) * scaleY;
-    const dxEye = cursorSVG_X - targetX;
-    const dyEye = cursorSVG_Y - targetY;
-    const distEye = Math.sqrt(dxEye * dxEye + dyEye * dyEye);
+    requestAnimationFrame(tick);
+  }
 
-    const isHovered = distEye < EYEBALL_RADIUS;
-    gsap.to(eyeball, {
-      fill: isHovered ? EYEBALL_HOVER_COLOR : EYEBALL_COLOR,
-      duration: 0.2,
-      overwrite: 'auto',
-    });
-  });
+  requestAnimationFrame(tick);
 </script>
