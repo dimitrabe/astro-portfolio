@@ -1,10 +1,19 @@
 ---
+import { getCollection } from 'astro:content';
+
 const svgWidth = 680;
 const svgHeight = 720;
 const canvasX = Math.round(svgWidth * 0.2);
 const canvasY = Math.round(svgHeight * 0.083);
 const canvasWidth = Math.round(svgWidth * 0.6);
 const canvasHeight = Math.round(svgHeight * 0.8);
+
+const allPosts = await getCollection('blog');
+const [latestPainting] = allPosts
+  .filter((post) => post.data.category === 'paintings')
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const heroImage = latestPainting?.data.heroImage;
 ---
 
 <div class="easel-container">
@@ -31,35 +40,27 @@ const canvasHeight = Math.round(svgHeight * 0.8);
         <feDropShadow dx="1" dy="1" stdDeviation="0" flood-opacity="1" flood-color="var(--dark-purple)"
         ></feDropShadow>
       </filter>
+      <!-- White rect visible by default = painting hidden; brush strokes are
+           punched in as black, which erases the white overlay there. -->
+      <mask id="reveal-mask" maskUnits="userSpaceOnUse">
+        <rect x={canvasX} y={canvasY} width={canvasWidth} height={canvasHeight} fill="#FFFFFF"></rect>
+        <g id="brush-strokes"></g>
+      </mask>
     </defs>
 
-    <!-- Easel legs -->
-    <!-- <line
-      x1={canvasX + 0.2 * canvasWidth}
-      y1={svgHeight}
-      x2={svgWidth * 0.5}
-      y2={canvasY - 12}
-      stroke="var(--dark-blue)"
-      stroke-width="10"
-      stroke-linecap="round"></line>
-    <line
-      x1={canvasX + 0.8 * canvasWidth}
-      y1={svgHeight}
-      x2={svgWidth * 0.5}
-      y2={canvasY - 12}
-      stroke="var(--dark-blue)"
-      stroke-width="10"
-      stroke-linecap="round"></line>
-    <line
-      x1={canvasX - 6}
-      y1={canvasY + canvasHeight + 4}
-      x2={canvasX + canvasWidth + 6}
-      y2={canvasY + canvasHeight + 4}
-      stroke="var(--dark-blue)"
-      stroke-width="6"
-      stroke-linecap="round"></line> -->
+    <!-- Painting, revealed as the white overlay is brushed away -->
+    {heroImage && (
+      <image
+        href={heroImage.src}
+        x={canvasX}
+        y={canvasY}
+        width={canvasWidth}
+        height={canvasHeight}
+        preserveAspectRatio="xMidYMid slice"
+        clip-path="url(#canvas-clip)"></image>
+    )}
 
-    <!-- Canvas with shadow -->
+    <!-- White canvas overlay with shadow, masked away where brushed -->
     <rect
       id="canvas-area"
       x={canvasX}
@@ -68,12 +69,8 @@ const canvasHeight = Math.round(svgHeight * 0.8);
       height={canvasHeight}
       fill="#FFFFFF"
       rx="2"
-      filter="url(#canvas-shadow)"></rect>
-
-    <!-- Paint trails container (clipped to canvas) -->
-    <g id="paint-container" clip-path="url(#canvas-clip)">
-      <!-- Paint strokes will be added here dynamically -->
-    </g>
+      filter="url(#canvas-shadow)"
+      mask="url(#reveal-mask)"></rect>
   </svg>
 </div>
 
@@ -87,19 +84,11 @@ const canvasHeight = Math.round(svgHeight * 0.8);
   #canvas-area {
     cursor: crosshair;
   }
-
-  .paint-stroke {
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 12;
-  }
 </style>
 
 <script>
   import { gsap } from "gsap";
 
-  // Type definitions
   interface Point {
     x: number;
     y: number;
@@ -107,40 +96,22 @@ const canvasHeight = Math.round(svgHeight * 0.8);
 
   const svg = document.getElementById("easel-svg") as SVGSVGElement | null;
   const canvasArea = document.getElementById("canvas-area") as SVGRectElement | null;
-  const paintContainer = document.getElementById("paint-container") as SVGGElement | null;
+  const brushStrokes = document.getElementById("brush-strokes") as SVGGElement | null;
 
-  // Guard clause - exit if elements not found
-  if (!svg || !canvasArea || !paintContainer) {
+  if (!svg || !canvasArea || !brushStrokes) {
     console.error("Required SVG elements not found");
     throw new Error("Required SVG elements not found");
   }
 
-  // Read canvas dimensions from data attributes (already calculated in Astro)
   const canvasX = parseFloat(svg.dataset.canvasX || "0");
   const canvasY = parseFloat(svg.dataset.canvasY || "0");
   const canvasWidth = parseFloat(svg.dataset.canvasWidth || "0");
   const canvasHeight = parseFloat(svg.dataset.canvasHeight || "0");
 
-  // Predefined paint colors
-  // Get CSS custom properties
-  const rootStyles = getComputedStyle(document.documentElement);
-  const colors = [
-    rootStyles.getPropertyValue("--yellow").trim(),
-    rootStyles.getPropertyValue("--light-pink").trim(),
-    rootStyles.getPropertyValue("--pink").trim(),
-    rootStyles.getPropertyValue("--dark-pink").trim(),
-    rootStyles.getPropertyValue("--light-blue").trim(),
-    rootStyles.getPropertyValue("--blue").trim(),
-    rootStyles.getPropertyValue("--light-purple").trim(),
-    rootStyles.getPropertyValue("--purple").trim(),
-    rootStyles.getPropertyValue("--dark-purple").trim(),
-  ];
-  let currentColorIndex = 0;
   let isDrawing = false;
   let currentPath: SVGPathElement | null = null;
   let points: Point[] = [];
 
-  // Get SVG coordinates from mouse event
   function getSVGCoordinates(event: MouseEvent): Point {
     if (!svg) return { x: 0, y: 0 };
     const CTM = svg.getScreenCTM();
@@ -153,7 +124,6 @@ const canvasHeight = Math.round(svgHeight * 0.8);
     };
   }
 
-  // Check if point is inside canvas area
   function isInsideCanvas(x: number, y: number): boolean {
     return (
       x >= canvasX &&
@@ -163,7 +133,6 @@ const canvasHeight = Math.round(svgHeight * 0.8);
     );
   }
 
-  // Create simple path from points
   function createSimplePath(points: Point[]): string {
     if (points.length < 2) return "";
 
@@ -176,34 +145,33 @@ const canvasHeight = Math.round(svgHeight * 0.8);
     return path;
   }
 
-  // Mouse enter canvas - start new paint stroke with new color
+  // Mouse enter canvas - start a new brush stroke that erases the overlay
   canvasArea.addEventListener("mouseenter", (e: MouseEvent) => {
     isDrawing = true;
     points = [];
 
-    // Cycle to next color
-    currentColorIndex = (currentColorIndex + 1) % colors.length;
-    const currentColor = colors[currentColorIndex];
-
-    // Create new path element
     currentPath = document.createElementNS(
       "http://www.w3.org/2000/svg",
       "path",
     );
-    currentPath.classList.add("paint-stroke");
-    currentPath.setAttribute("stroke", currentColor);
+    currentPath.classList.add("brush-stroke");
+    // Presentation attributes, not CSS: this element is created at runtime, so
+    // it never gets Astro's scoped-style data attribute and a scoped CSS rule
+    // targeting .brush-stroke would silently fail to match it.
     currentPath.setAttribute("fill", "none");
-    currentPath.setAttribute("stroke-width", "12");
-    paintContainer.appendChild(currentPath);
+    currentPath.setAttribute("stroke", "#000000");
+    currentPath.setAttribute("stroke-width", "32");
+    currentPath.setAttribute("stroke-linecap", "round");
+    currentPath.setAttribute("stroke-linejoin", "round");
+    brushStrokes.appendChild(currentPath);
 
-    // Fade in the stroke
     gsap.fromTo(
       currentPath,
       {
         opacity: 0,
       },
       {
-        opacity: 0.85,
+        opacity: 1,
         duration: 0.3,
         ease: "power2.out",
       },
@@ -215,7 +183,7 @@ const canvasHeight = Math.round(svgHeight * 0.8);
     }
   });
 
-  // Mouse move - continue drawing
+  // Mouse move - continue erasing the overlay along the cursor path
   svg.addEventListener("mousemove", (e: MouseEvent) => {
     if (!isDrawing || !currentPath) return;
 
@@ -224,7 +192,6 @@ const canvasHeight = Math.round(svgHeight * 0.8);
     if (isInsideCanvas(coords.x, coords.y)) {
       points.push(coords);
 
-      // Update path
       const pathData = createSimplePath(points);
       currentPath.setAttribute("d", pathData);
     }
