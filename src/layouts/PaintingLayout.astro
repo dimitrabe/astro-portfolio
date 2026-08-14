@@ -63,6 +63,12 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			filter: grayscale(0);
 		}
 
+		@media (max-width: 768px) {
+			main :global(.posts-grid .post-image) {
+			filter: grayscale(0);
+		}
+		}
+
 		/* Hide text elements (title, description, date) */
 		main :global(.posts-grid .post-title),
 		main :global(.posts-grid .post-description),
