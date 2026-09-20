@@ -493,5 +493,9 @@ body {
 
 body {
 	background-color: var(--background-neutral-light);
+	background-image: url('../assets/scanning-canva-textures-aquarella-back_2.webp');
+	background-repeat: repeat-y;
+	background-size: 100% auto;
+	background-position: top center;
 	margin: 0;
 }
