@@ -9,5 +9,7 @@ category: 'animation'
 
 
 First things first! Credits! Music by Kevin MacLeod “Maple Leaf Rag” Licensed under Creative Commons: By Attribution 4.0 License
+
 As stated in the previous post, a conference is about people, participants and organisers cooperating and mingling together and reacting to the subjects presented.
+
 This animation is a mix of digital and physical world. The set, the characters and their movements are shot as individual photographs, while the typography is inserted on top in the digital realm, mainly because my scissors skills are mediocre and there is no budget for a laser cutter.
